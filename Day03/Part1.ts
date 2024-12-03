@@ -6,7 +6,7 @@ const answer = validItems
     .map(item => item.slice(4, item.length - 1).split(",").map(Number))
     .reduce((acc, state) => {
         if (state.length != 2) return acc;
-        return acc += (state[0] * state[1])
+        return acc += state.product()
     }, 0)   
 
 console.log(answer)

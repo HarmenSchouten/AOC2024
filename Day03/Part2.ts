@@ -11,7 +11,7 @@ const answer = validItems
         if (enabled) {
             const numbers = state.slice(4, state.length - 1).split(",").map(Number)
             if (numbers.length != 2) return acc;
-            acc += (numbers[0] * numbers[1])
+            acc += numbers.product()
         }
         return acc;
     }, 0)   
