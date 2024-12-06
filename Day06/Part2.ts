@@ -1,27 +1,23 @@
+import { Grid2D } from "../utils/grid2d.ts";
 import "../utils/index.ts"
 const input = await Deno.readTextFile("./Day06/input.txt");
-
-const grid = input.splitLb().map(line => line.split(""))
-const startY = grid.findIndex(y => y.includes("^"))!
-const startX = grid[startY].indexOf("^")
+const grid = new Grid2D(input, v => String(v))
+const start = grid.find(item => item.value === "^")!
 
 const runRoute = (x?: number, y?: number) => {
-    
+    const visitedPositions = new Set<string>()
     const shouldDetectLoop = x !== undefined && y !== undefined
     
-    if (shouldDetectLoop) {
-        grid[y][x] = "#"
-    }
+    if (shouldDetectLoop) grid.set(x, y, "#")
     
     let currentDirection = "U"
-    const visitedPositions = new Set<string>()
-    let currentPosition = [startX, startY]
+    let currentPosition = start
     
-    while (grid[currentPosition[1]]?.[currentPosition[0]]) {
+    while (grid.get(currentPosition.x, currentPosition.y)?.value) {
         
         const key = shouldDetectLoop
-            ? `${currentPosition[0]}, ${currentPosition[1]}, ${currentDirection}`   
-            : `${currentPosition[0]}, ${currentPosition[1]}, ${grid[currentPosition[1]][currentPosition[0]]}`
+            ? `${currentPosition.x}, ${currentPosition.y}, ${currentDirection}`   
+            : `${currentPosition.x}, ${currentPosition.y}, ${grid.get(currentPosition.x, currentPosition.y)?.value}`
 
         if (shouldDetectLoop && visitedPositions.has(key)) {
             break;
@@ -32,41 +28,39 @@ const runRoute = (x?: number, y?: number) => {
         switch (currentDirection) {
             case "U":
                 {
-                    const newPosition = [currentPosition[0], currentPosition[1] - 1]            
-                    if (grid?.[newPosition[1]]?.[newPosition[0]] === "#") currentDirection = "R"
+                    const newPosition = currentPosition.up()            
+                    if (newPosition.value === "#") currentDirection = "R"
                     else currentPosition = newPosition!
                     break;
                 }
             case "R":
                 {
-                    const newPosition = [currentPosition[0] + 1, currentPosition[1]]
-                    if (grid?.[newPosition[1]]?.[newPosition[0]] === "#") currentDirection = "D"
+                    const newPosition = currentPosition.right()
+                    if (newPosition.value === "#") currentDirection = "D"
                     else currentPosition = newPosition!
                     break;
                 }
             case "D":
                 {
-                    const newPosition = [currentPosition[0], currentPosition[1] + 1]
-                    if (grid?.[newPosition[1]]?.[newPosition[0]] === "#") currentDirection = "L"
+                    const newPosition = currentPosition.down()
+                    if (newPosition.value === "#") currentDirection = "L"
                     else currentPosition = newPosition!
                     break;
                 }
             case "L":
                 {
-                    const newPosition = [currentPosition[0] - 1, currentPosition[1]]
-                    if (grid?.[newPosition[1]]?.[newPosition[0]] === "#") currentDirection = "U"
+                    const newPosition = currentPosition.left()
+                    if (newPosition.value === "#") currentDirection = "U"
                     else currentPosition = newPosition!
                     break;
                 }
         }
     }
 
-    if (shouldDetectLoop) {
-        grid[y][x] = "."
-    }
+    if (shouldDetectLoop) grid.set(x, y, '.')
 
     return {
-        isLooping: currentPosition !== undefined,
+        isLooping: currentPosition.value !== undefined,
         visitedPositions
     }
 }
@@ -76,16 +70,9 @@ const { visitedPositions } = runRoute()
 const answer = [...visitedPositions.entries()]
     .map(([item]) => item.split(", ").slice(0, 2).map(Number))
     .reduce((acc, [x, y]) => {
-        const isStart = x === startX && y === startY
-        if (isStart) return acc;
-
-        const isWall = grid[y][x] === "#"
-        if (isWall) return acc;
-
-        if (runRoute(x, y).isLooping) {
-            return acc + 1;
-        }
-        
+        if (x === start.x && y === start.y) return acc;
+        if (grid.get(x, y).value === "#") return acc;
+        if (runRoute(x, y).isLooping) return acc += 1;
         return acc
     }, 0)
 

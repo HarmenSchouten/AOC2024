@@ -1,14 +1,14 @@
-import { Grid } from "../utils/grid.ts";
+import { Grid2D } from "../utils/grid2d.ts";
 import "../utils/index.ts"
 const input = await Deno.readTextFile("./Day06/input.txt");
 
-const grid = new Grid(input, v => String(v))
+const grid = new Grid2D(input, v => String(v))
 
 let currentDirection = "U"
 const visitedPositions = new Set<string>()
-let currentPosition = grid.cells.find(item => item.value === "^")!
+let currentPosition = grid.find(item => item.value === "^")!
 
-while (currentPosition !== undefined) {
+while (grid.get(currentPosition.x, currentPosition.y)?.value) {
 
     visitedPositions.add(currentPosition.toString())
     switch (currentDirection) {
