@@ -17,12 +17,103 @@ export class Grid2D<T = string> {
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
     find(predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+        for (let y = 0; y < this.height; y++)
+        for (let x = 0; x < this.width; x++) {
+            const cell = this.get(x, y);
+            if (predicate(cell)) {
+                return cell;
+            }
+        }
+    }
+
+    /**
+     * Find the last cell that matches the predicate. Returns the last match
+     * @param predicate The predicate to match
+     * @returns A gridcell object if the predicate matches, otherwise undefined
+     */
+    findLast(predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+        for (let y = this.height - 1; y >= 0; y--)
+        for (let x = this.width - 1; x >= 0; x--) {
+            const cell = this.get(x, y);
+            if (predicate(cell)) {
+                return cell;
+            }
+        }
+    }
+
+    /**
+     * Find all cells that match the predicate.
+     * @param predicate The predicate to match
+     * @returns An array of gridcell objects that match the predicate
+     */
+    filter(predicate: (cell: GridCell<T>) => boolean): GridCell<T>[] {
+        const result: GridCell<T>[] = [];
+        for (let y = 0; y < this.height; y++)
+        for (let x = 0; x < this.width; x++) {
+            const cell = this.get(x, y);
+            if (predicate(cell)) {
+                result.push(cell);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Find the first cell in a specific column that matches the predicate. Returns the first match
+     * @param column Index of the column to search in
+     * @param predicate The predicate to match
+     * @returns A gridcell object if the predicate matches, otherwise undefined
+     */
+    findInColumn(column: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
         for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                const cell = this.get(x, y);
-                if (predicate(cell)) {
-                    return cell;
-                }
+            const cell = this.get(column, y);
+            if (predicate(cell)) {
+                return cell;
+            }
+        }
+    }
+
+    /**
+     * Find the last cell in a specific column that matches the predicate. Returns the last match
+     * @param column Index of the column to search in
+     * @param predicate The predicate to match
+     * @returns A gridcell object if the predicate matches, otherwise undefined
+     */
+    findLastInColumn(column: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+        for (let y = this.height - 1; y >= 0; y--) {
+            const cell = this.get(column, y);
+            if (predicate(cell)) {
+                return cell;
+            }
+        }
+    }
+
+    /**
+     * Find the first cell in a specific row that matches the predicate. Returns the first match
+     * @param row Index of the row to search in
+     * @param predicate The predicate to match
+     * @returns A gridcell object if the predicate matches, otherwise undefined
+     */
+    findInRow(row: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+        for (let x = 0; x < this.width; x++) {
+            const cell = this.get(x, row);
+            if (predicate(cell)) {
+                return cell;
+            }
+        }
+    }
+
+    /**
+     * Find the last cell in a specific row that matches the predicate. Returns the last match
+     * @param row Index of the row to search in
+     * @param predicate The predicate to match
+     * @returns A gridcell object if the predicate matches, otherwise undefined
+     */
+    findLastInRow(row: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+        for (let x = this.width - 1; x >= 0; x--) {
+            const cell = this.get(x, row);
+            if (predicate(cell)) {
+                return cell;
             }
         }
     }
