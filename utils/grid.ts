@@ -71,7 +71,7 @@ export class Grid<T> {
     updateCell(x: number, y: number, value: T) {
         const cellIndex = this.cells.findIndex(c => c.x === x && c.y === y)
         if (cellIndex === -1) return;
-        this.cells.splice(cellIndex, 1, { ...this.cells[cellIndex], value: value } as GridCell<T>)
+        this.cells.splice(cellIndex, 1, new GridCell(this, x , y, value))
     }
 
     /** Convert the grid back to a string representation */
