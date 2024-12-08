@@ -17,11 +17,13 @@ const answer = equationLines.reduce((sum, line) => {
     const possibleResults = line.numbers.reduce((acc, state) => {
         if (acc.length === 0) return [state]
 
-        return acc.flatMap(nr => [
-            nr + state,
-            nr * state,
-            Number(`${nr}${state}`)
-        ])
+        return acc
+            .flatMap(nr => [
+                nr + state,
+                nr * state,
+                Number(`${nr}${state}`)
+            ])
+            .filter(nr => nr <= line.result)
     }, [] as number[])
     
     if (possibleResults.includes(line.result)) {
