@@ -16,7 +16,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    find(predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    find(predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let y = 0; y < this.height; y++)
         for (let x = 0; x < this.width; x++) {
             const cell = this.get(x, y);
@@ -31,7 +31,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    findLast(predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    findLast(predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let y = this.height - 1; y >= 0; y--)
         for (let x = this.width - 1; x >= 0; x--) {
             const cell = this.get(x, y);
@@ -46,8 +46,8 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns An array of gridcell objects that match the predicate
      */
-    filter(predicate: (cell: GridCell<T>) => boolean): GridCell<T>[] {
-        const result: GridCell<T>[] = [];
+    filter(predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T>[] {
+        const result: Grid2DCell<T>[] = [];
         for (let y = 0; y < this.height; y++)
         for (let x = 0; x < this.width; x++) {
             const cell = this.get(x, y);
@@ -64,7 +64,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    findInColumn(column: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    findInColumn(column: number, predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let y = 0; y < this.height; y++) {
             const cell = this.get(column, y);
             if (predicate(cell)) {
@@ -79,7 +79,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    findLastInColumn(column: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    findLastInColumn(column: number, predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let y = this.height - 1; y >= 0; y--) {
             const cell = this.get(column, y);
             if (predicate(cell)) {
@@ -94,7 +94,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    findInRow(row: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    findInRow(row: number, predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let x = 0; x < this.width; x++) {
             const cell = this.get(x, row);
             if (predicate(cell)) {
@@ -109,7 +109,7 @@ export class Grid2D<T = string> {
      * @param predicate The predicate to match
      * @returns A gridcell object if the predicate matches, otherwise undefined
      */
-    findLastInRow(row: number, predicate: (cell: GridCell<T>) => boolean): GridCell<T> | undefined {
+    findLastInRow(row: number, predicate: (cell: Grid2DCell<T>) => boolean): Grid2DCell<T> | undefined {
         for (let x = this.width - 1; x >= 0; x--) {
             const cell = this.get(x, row);
             if (predicate(cell)) {
@@ -136,7 +136,7 @@ export class Grid2D<T = string> {
      * @returns A GridCell object with the requested coordinates and if available, the value at that position
      */
     get(x: number, y: number) {
-        return new GridCell<T>(this, x, y, this.cells?.[y]?.[x]);
+        return new Grid2DCell<T>(this, x, y, this.cells?.[y]?.[x]);
     }
 
     /**
@@ -190,7 +190,7 @@ export class Grid2D<T = string> {
  * Represents a cell in a 2D grid
  * @typeParam T The type of the value stored in the cell
  * */
-class GridCell<T = string> {
+export class Grid2DCell<T = string> {
 
     public x: number;
     public y: number;
@@ -248,7 +248,7 @@ class GridCell<T = string> {
      * @param filterfn A filter function to filter the results
      * @returns An array of adjacent neighbours
      */
-    getAdjacentNeighbours(includeSelf = false, filterfn?: (cell: GridCell<T>) => boolean) {
+    getAdjacentNeighbours(includeSelf = false, filterfn?: (cell: Grid2DCell<T>) => boolean) {
         return [
             includeSelf ? this : undefined,
             this.up(),
@@ -264,7 +264,7 @@ class GridCell<T = string> {
      * @param filterfn A filter function to filter the results
      * @returns An array of diagonal neighbours
      */
-    getDiagonalNeighbours(includeSelf = false, filterfn?: (cell: GridCell<T>) => boolean) {
+    getDiagonalNeighbours(includeSelf = false, filterfn?: (cell: Grid2DCell<T>) => boolean) {
         return [
             includeSelf ? this : undefined,
             this.up()?.left(),
@@ -280,7 +280,7 @@ class GridCell<T = string> {
      * @param filterfn A filter function to filter the results
      * @returns An array of all neighbours
      */
-    getAllNeighbours(includeSelf = false, filterfn?: (cell: GridCell<T>) => boolean) {
+    getAllNeighbours(includeSelf = false, filterfn?: (cell: Grid2DCell<T>) => boolean) {
         return [
             ...this.getAdjacentNeighbours(includeSelf, filterfn),
             ...this.getDiagonalNeighbours(false, filterfn)
