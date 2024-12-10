@@ -20,11 +20,11 @@ const answer = trailheads.reduce((acc, state) => {
         if (!current) break;
 
         const cell = grid.get(current.x, current.y)!
-        const validNeigbours = cell.getAdjacentNeighbours(false, item => item.value !== undefined && item.value - cell.value! === 1)
+        const validNeighbours = cell.getAdjacentNeighbours(false, item => item.value !== undefined && item.value - cell.value! === 1)
 
-        if (validNeigbours.length === 0) continue;
+        if (validNeighbours.length === 0) continue;
 
-        validNeigbours.forEach(item => {
+        validNeighbours.forEach(item => {
             if (item?.value === 9) trailEnds.push(`${item!.x},${item!.y}`)
             queue.push({x: item!.x, y: item!.y, length: current.length + 1})
         })
