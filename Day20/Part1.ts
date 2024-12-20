@@ -47,16 +47,15 @@ const answer = grid
 
         const idxLeft = winningPath.findIndex(item => item[0] === wLeft.x && item[1] === wLeft.y)
         const idxRight = winningPath.findIndex(item => item[0] === wRight.x && item[1] === wRight.y)
-        if (idxLeft !== -1 && idxRight !== -1) acc.push({a: winningPath[idxLeft], b: winningPath[idxRight], gap: Math.abs(idxRight - idxLeft) - 2})
+        if (idxLeft !== -1 && idxRight !== -1) acc.push(Math.abs(idxRight - idxLeft) - 2)
 
         const ixUp = winningPath.findIndex(item => item[0] === wUp.x && item[1] === wUp.y)
         const idxDown = winningPath.findIndex(item => item[0] === wDown.x && item[1] === wDown.y)
-        if (ixUp !== -1 && idxDown !== -1) acc.push({a: winningPath[ixUp], b: winningPath[idxDown], gap: Math.abs(ixUp - idxDown) - 2})
+        if (ixUp !== -1 && idxDown !== -1) acc.push(Math.abs(ixUp - idxDown) - 2)
 
         return acc;
-    }, [] as {a: number[], b: number[], gap: number}[])
-    .sort((a, b) => a.gap - b.gap)
-    .filter(item => item.gap >= 100)
+    }, [] as number[])
+    .filter(item => item >= 100)
     .length
 
 console.log(answer)
