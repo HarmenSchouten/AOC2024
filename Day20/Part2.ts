@@ -41,25 +41,21 @@ while (true) {
     queue.sort((a, b) => a.score - b.score)
 }
 
+visitedCells.clear()
 const exploredPaths = new Set<string>()
 for (let i = 0; i < winningPath.length; i++) 
 for (let j = 1; j < winningPath.length; j++) {
-    const start = winningPath[i]
-    const end = winningPath[j]
-    const mDist = manhattan({x: start[0], y: start[1]}, {x: end[0], y: end[1]})
+    const mDist = manhattan(
+        {x: winningPath[i][0], y: winningPath[i][1]}, 
+        {x: winningPath[j][0], y: winningPath[j][1]})
 
-    if (mDist > 1 && mDist <= 20) {
-        const idx1 = winningPath.indexOf(start)
-        const idx2 = winningPath.indexOf(end)
+    if (mDist > 1 && mDist <= 20 && (Math.abs(j - i) - mDist) >= 100) {
+        const key1 = `s:${i};e:${j}`
+        const key2 = `s:${j};e:${i}`
 
-        if ((Math.abs(idx2 - idx1) - mDist) >= 100) {
-            const key1 = `s:${start[0]},${start[1]};e:${end[0]},${end[1]};score:${(Math.abs(idx2 - idx1) - mDist)}`
-            const key2 = `s:${end[0]},${end[1]};e:${start[0]},${start[1]};score:${(Math.abs(idx2 - idx1) - mDist)}`
+        if (exploredPaths.has(key1) || exploredPaths.has(key2)) continue;
 
-            if (exploredPaths.has(key1) || exploredPaths.has(key2)) continue;
-
-            exploredPaths.add(key1)
-        }
+        exploredPaths.add(key1)
     }
 }
 
